@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+    <div class="edit_container">
+        <div id="title">{{item.title}}</div>
+        <div id="picture_upload">for picture uploading</div>
+        <div id="category">{{item.category}}</div>
+        <div id="keywords">{{item.keywords}}</div>
+        <div id="length">{{item.length}}  {{item.length_unit}}</div>
+        <div id="width">{{item.width}} {{item.width_unit}}</div>
+        <div id="holiday">{{item.holiday}}</div>
+        <div id="reflective">{{item.reflective}}</div>
+        <div id="quantity">{{item.quantity}}</div>
+        <div id="price">{{item.price}}</div>
+    </div>
+</body>
+{% endblock %}

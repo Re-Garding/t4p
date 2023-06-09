@@ -32,7 +32,12 @@ class User(db.Model):
         return f'<User name: {self.fname} email:{self.email}>'
     
 
+class Admin(db.Model):
+    """a table to store site admins"""
+    __tablename__ = 'admins'
 
+    email = db.Column(db.String(), primary_key=True)
+    password = db.Column(db.String())
 
     
 class Item(db.Model):
@@ -44,29 +49,40 @@ class Item(db.Model):
     title = db.Column(db.String(), nullable= False)
     category = db.Column(db.String(), nullable= False)
     keywords = db.Column(db.String())
-    blurb = db.Column(db.String())
     washable = db.Column(db.Boolean(), nullable= False)
     width = db.Column(db.Float(), nullable=False)
+    width_unit = db.Column(db.String())
+    length = db.Column(db.Integer)
+    length_unit = db.Column(db.String())
     holiday = db.Column(db.String(), nullable= False)
-    pic_path = db.Column(db.String(), nullable= False)
     reflective = db.Column(db.Boolean, nullable=False)
-    pic2_path = db.Column(db.String())
-    no_var_qty = db.Column(db.Integer, db.ForeignKey('quantity.id'))
+    quantity = db.Column(db.Integer)
+    price = db.Column(db.Float())
+    sized_qty = db.Column(db.Integer, db.ForeignKey('quantity.id'))
     var1 = db.Column(db.Integer, db.ForeignKey('var1.id'))
     var2 = db.Column(db.Integer, db.ForeignKey('var2.id'))
     var3 = db.Column(db.Integer, db.ForeignKey('var3.id'))
     var4 = db.Column(db.Integer, db.ForeignKey('var4.id'))
     var_without_quantity = db.Column(db.String())
+    materials_used = db.Column(db.String())
+    handmade = db.Column(db.Boolean())
+    primary_color = db.Column(db.String())
+    secondary_color = db.Column(db.String())
+    collar_type = db.Column(db.String())
+    closure_type = db.Column(db.String())
+    item_type = db.Column(db.String())    
+    pic = db.Column(db.Integer, db.ForeignKey('pictures.id'))
+
 
     def __repr__(self):
         return f'Title: {self.title}'
 
-    quantity = db.relationship('Quantity', backref='item')
+    qty = db.relationship('Quantity', backref='item')
     var1_qty = db.relationship('Variation1', backref='item')
     var2_qty = db.relationship('Variation2', backref='item')
     var3_qty = db.relationship('Variation3', backref='item')
     var4_qty = db.relationship('Variation4', backref='item')
-
+    picture = db.relationship('Picture', backref='pic')
 
 
 class Quantity(db.Model):
@@ -83,10 +99,10 @@ class Quantity(db.Model):
     l_cost  = db.Column(db.Float())
     xl = db.Column(db.Integer)
     xl_cost = db.Column(db.Float())
-    _4ft = db.Column(db.Integer)
-    _4ft_cost = db.Column(db.Float())
-    _6ft = db.Column(db.Integer)
-    _6ft_cost = db.Column(db.Float())
+    four_ft = db.Column(db.Integer)
+    four_ft_cost = db.Column(db.Float())
+    six_ft = db.Column(db.Integer)
+    six_ft_cost = db.Column(db.Float())
     xxs = db.Column(db.Integer)
     xxs_cost = db.Column(db.Float())
     xs = db.Column(db.Integer)
@@ -112,17 +128,17 @@ class Variation1(db.Model):
     l_cost  = db.Column(db.Float())
     xl = db.Column(db.Integer)
     xl_cost = db.Column(db.Float())
-    _4ft = db.Column(db.Integer)
-    _4ft_cost = db.Column(db.Float())
-    _6ft = db.Column(db.Integer)
-    _6ft_cost = db.Column(db.Float())
+    four_ft = db.Column(db.Integer)
+    four_ft_cost = db.Column(db.Float())
+    six_ft = db.Column(db.Integer)
+    six_ft_cost = db.Column(db.Float())
     xxs = db.Column(db.Integer)
     xxs_cost = db.Column(db.Float())
     xs = db.Column(db.Integer)
     xs_cost = db.Column(db.Float())
 
     def __repr__(self):
-        return f'Id {self.id} Variation: {self.variation}'
+        return f'Id {self.id} Variation1: {self.variation}'
     
 
 
@@ -141,17 +157,17 @@ class Variation2(db.Model):
     l_cost  = db.Column(db.Float())
     xl = db.Column(db.Integer)
     xl_cost = db.Column(db.Float())
-    _4ft = db.Column(db.Integer)
-    _4ft_cost = db.Column(db.Float())
-    _6ft = db.Column(db.Integer)
-    _6ft_cost = db.Column(db.Float())
+    four_ft = db.Column(db.Integer)
+    four_ft_cost = db.Column(db.Float())
+    six_ft = db.Column(db.Integer)
+    six_ft_cost = db.Column(db.Float())
     xxs = db.Column(db.Integer)
     xxs_cost = db.Column(db.Float())
     xs = db.Column(db.Integer)
     xs_cost = db.Column(db.Float())
 
     def __repr__(self):
-        return f'Id {self.id} Variation: {self.variation}'
+        return f'Id {self.id} Variation2: {self.variation}'
     
 
 
@@ -170,17 +186,17 @@ class Variation3(db.Model):
     l_cost  = db.Column(db.Float())
     xl = db.Column(db.Integer)
     xl_cost = db.Column(db.Float())
-    _4ft = db.Column(db.Integer)
-    _4ft_cost = db.Column(db.Float())
-    _6ft = db.Column(db.Integer)
-    _6ft_cost = db.Column(db.Float())
+    four_ft = db.Column(db.Integer)
+    four_ft_cost = db.Column(db.Float())
+    six_ft = db.Column(db.Integer)
+    six_ft_cost = db.Column(db.Float())
     xxs = db.Column(db.Integer)
     xxs_cost = db.Column(db.Float())
     xs = db.Column(db.Integer)
     xs_cost = db.Column(db.Float())
 
     def __repr__(self):
-        return f'Id {self.id} Variation: {self.variation}'
+        return f'Id {self.id} Variation3: {self.variation}'
     
 
 
@@ -199,19 +215,27 @@ class Variation4(db.Model):
     l_cost  = db.Column(db.Float())
     xl = db.Column(db.Integer)
     xl_cost = db.Column(db.Float())
-    _4ft = db.Column(db.Integer)
-    _4ft_cost = db.Column(db.Float())
-    _6ft = db.Column(db.Integer)
-    _6ft_cost = db.Column(db.Float())
+    four_ft = db.Column(db.Integer)
+    four_ft_cost = db.Column(db.Float())
+    six_ft = db.Column(db.Integer)
+    six_ft_cost = db.Column(db.Float())
     xxs = db.Column(db.Integer)
     xxs_cost = db.Column(db.Float())
     xs = db.Column(db.Integer)
     xs_cost = db.Column(db.Float())
 
     def __repr__(self):
-        return f'Id {self.id} Variation: {self.variation}'
+        return f'Id {self.id} Variation4: {self.variation}'
 
 
+class Picture(db.Model):
+    """a picture url"""
+
+    __tablename__='pictures'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    item_id = db.Column(db.Integer)
+    url = db.Column(db.String(), nullable=False)
 
 
 class Invoice(db.Model):

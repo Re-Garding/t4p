@@ -1,6 +1,21 @@
 from model import *
 
 
+def get_item(id):
+    return Item.query.get(id)
+
+def new_pic(url, item_id=None):
+    pic = Picture(url=url, item_id=item_id)
+    db.session.add(pic)
+    db.session.commit()
+    return pic
+
+def add_item_to_pic(pic_id, item_id):
+    pic = Picture.query.get(pic_id)
+    pic.item_id = item_id
+    db.session.commit()
+
+
 
 def create_user(email, fname, lname, password, street=None,
                 city=None, state=None, zipcode=None, unit=None, ):
@@ -29,37 +44,57 @@ def create_item(
         title, 
         category,
         keywords, 
-        blurb,
         wash,
         width,
+        width_unit,
+        length,
+        length_unit,
         holiday,  
-        pic,         
-        pic2=None, 
         reflect=False, 
-        no_var_qty=None, 
+        quantity=None,
+        price = None,
+        sized_qty = None,
         var1=None, 
         var2=None, 
         var3=None,
         var4=None, 
-        var_without_quantity=None
+        var_without_quantity=None,
+        materials_used=None,
+        handmade=None,
+        primary_color=None,
+        secondary_color=None,
+        collar_type=None,
+        closure_type=None,
+        item_type=None,
+        pic=None
     ):
     """create a new db item"""
     item = Item(title=title, 
                 category=category, 
                 keywords=keywords,
-                blurb=blurb, 
-                washable=wash, 
+                washable = wash,
                 width=width,
-                holiday=holiday, 
-                pic_path=pic, 
+                width_unit=width_unit,
+                length=length,
+                length_unit=length_unit,
+                holiday=holiday,  
                 reflective=reflect, 
-                pic2_path = pic2,
-                no_var_qty=no_var_qty, 
-                var1 = var1, 
-                var2=var2,
-                var3=var3, 
+                quantity=quantity,
+                price = price,
+                sized_qty=sized_qty,
+                var1=var1, 
+                var2=var2, 
+                var3=var3,
                 var4=var4, 
-                var_without_quantity=var_without_quantity
+                var_without_quantity=var_without_quantity,
+                materials_used=materials_used,
+                handmade=handmade,
+                primary_color=primary_color,
+                secondary_color=secondary_color,
+                collar_type=collar_type,
+                closure_type=closure_type,
+                item_type=item_type,
+                pic=pic
                 )
     db.session.add(item)
     db.session.commit()
@@ -76,10 +111,10 @@ def create_qty(
         l_cost=None, 
         xl = None,
         xl_cost=None, 
-        _4ft = None,
-        _4ft_cost=None, 
-        _6ft = None,
-        _6ft_cost=None, 
+        four_ft = None,
+        four_ft_cost=None, 
+        six_ft = None,
+        six_ft_cost=None, 
         xxs=None,
         xxs_cost=None, 
         xs=None,
@@ -96,10 +131,10 @@ def create_qty(
         l_cost=l_cost, 
         xl = xl,
         xl_cost=xl_cost, 
-        _4ft = _4ft,
-        _4ft_cost=_4ft_cost, 
-        _6ft = _6ft,
-        _6ft_cost=_6ft_cost, 
+        four_ft = four_ft,
+        four_ft_cost=four_ft_cost, 
+        six_ft = six_ft,
+        six_ft_cost=six_ft_cost, 
         xxs=xxs,
         xxs_cost=xxs_cost, 
         xs=xs,
@@ -120,16 +155,16 @@ def create_var1(
         l_cost=None, 
         xl = None,
         xl_cost=None, 
-        _4ft = None,
-        _4ft_cost=None, 
-        _6ft = None,
-        _6ft_cost=None, 
+        four_ft = None,
+        four_ft_cost=None, 
+        six_ft = None,
+        six_ft_cost=None, 
         xxs=None,
         xxs_cost=None, 
         xs=None,
         xs_cost=None
         ):
-    """quantities for no variation items"""
+    """quantities for variation 1 items"""
 
     item = Variation1(
         variation=variation,
@@ -141,10 +176,10 @@ def create_var1(
         l_cost=l_cost, 
         xl = xl,
         xl_cost=xl_cost, 
-        _4ft = _4ft,
-        _4ft_cost=_4ft_cost, 
-        _6ft = _6ft,
-        _6ft_cost=_6ft_cost, 
+        four_ft = four_ft,
+        four_ft_cost=four_ft_cost, 
+        six_ft = six_ft,
+        six_ft_cost=six_ft_cost, 
         xxs=xxs,
         xxs_cost=xxs_cost, 
         xs=xs,
@@ -165,15 +200,15 @@ def create_var2(variation,
         l_cost=None, 
         xl = None,
         xl_cost=None, 
-        _4ft = None,
-        _4ft_cost=None, 
-        _6ft = None,
-        _6ft_cost=None, 
+        four_ft = None,
+        four_ft_cost=None, 
+        six_ft = None,
+        six_ft_cost=None, 
         xxs=None,
         xxs_cost=None, 
         xs=None,
         xs_cost=None):
-    """quantities for no variation items"""
+    """quantities for variation 2 items"""
 
     item = Variation2(
         variation=variation,
@@ -185,10 +220,10 @@ def create_var2(variation,
         l_cost=l_cost, 
         xl = xl,
         xl_cost=xl_cost, 
-        _4ft = _4ft,
-        _4ft_cost=_4ft_cost, 
-        _6ft = _6ft,
-        _6ft_cost=_6ft_cost, 
+        four_ft = four_ft,
+        four_ft_cost=four_ft_cost, 
+        six_ft = six_ft,
+        six_ft_cost=six_ft_cost, 
         xxs=xxs,
         xxs_cost=xxs_cost, 
         xs=xs,
@@ -211,16 +246,16 @@ def create_var3(
         l_cost=None, 
         xl = None,
         xl_cost=None, 
-        _4ft = None,
-        _4ft_cost=None, 
-        _6ft = None,
-        _6ft_cost=None, 
+        four_ft = None,
+        four_ft_cost=None, 
+        six_ft = None,
+        six_ft_cost=None, 
         xxs=None,
         xxs_cost=None, 
         xs=None,
         xs_cost=None
         ):
-    """quantities for no variation items"""
+    """quantities for variation 3 items"""
 
     item = Variation3(
         variation=variation, 
@@ -232,10 +267,10 @@ def create_var3(
         l_cost=l_cost, 
         xl = xl,
         xl_cost=xl_cost, 
-        _4ft = _4ft,
-        _4ft_cost=_4ft_cost, 
-        _6ft = _6ft,
-        _6ft_cost=_6ft_cost, 
+        four_ft = four_ft,
+        four_ft_cost=four_ft_cost, 
+        six_ft = six_ft,
+        six_ft_cost=six_ft_cost, 
         xxs=xxs,
         xxs_cost=xxs_cost, 
         xs=xs,
@@ -257,15 +292,15 @@ def create_var4(
         l_cost=None, 
         xl = None,
         xl_cost=None, 
-        _4ft = None,
-        _4ft_cost=None, 
-        _6ft = None,
-        _6ft_cost=None, 
+        four_ft = None,
+        four_ft_cost=None, 
+        six_ft = None,
+        six_ft_cost=None, 
         xxs=None,
         xxs_cost=None, 
         xs=None,
         xs_cost=None):
-    """quantities for no variation items"""
+    """quantities for variation 4 items"""
 
     item = Variation4(
         variation=variation, 
@@ -277,10 +312,10 @@ def create_var4(
         l_cost=l_cost, 
         xl = xl,
         xl_cost=xl_cost, 
-        _4ft = _4ft,
-        _4ft_cost=_4ft_cost, 
-        _6ft = _6ft,
-        _6ft_cost=_6ft_cost, 
+        four_ft = four_ft,
+        four_ft_cost=four_ft_cost, 
+        six_ft = six_ft,
+        six_ft_cost=six_ft_cost, 
         xxs=xxs,
         xxs_cost=xxs_cost, 
         xs=xs,
@@ -290,11 +325,14 @@ def create_var4(
     db.session.commit()
     return item
 
-
+def get_items():
+    """return all items in db"""
+    return Item.query.all()
 
 
 
 def create_invoice(doc, user, date):
+    """generate a new invoice"""
     invoice = Invoice(doc=doc, user=user, date=date)
     db.session.add(invoice)
     db.session.commit()
@@ -304,6 +342,7 @@ def create_invoice(doc, user, date):
 
 
 def create_sale(user, date, invoice, collar=None, leash=None):
+    """generate a new sale"""
     sale = Sale(user=user, date=date, invoice=invoice, collar=collar, leash=leash)
     db.session.add(sale)
     db.session.commit()
